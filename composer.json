@@ -1,5 +1,5 @@
 {
-  "name": "qcubed/orm",
+  "name": "dice/orm",
   "description": "Database drivers, query support, and code generator for the object relational model for QCubed",
   "keywords": ["php", "database", "orm"],
   "homepage": "http://qcu.be/",
@@ -11,7 +11,7 @@
       "source": "https://github.com/qcubed/common"
   },
   "require": {
-      "php": ">=5.5.0",
+    "php": ">=5.5.0",
     "qcubed/i18n": "dev-master",
     "qcubed/common": "dev-master"
   },
