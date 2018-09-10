@@ -301,7 +301,7 @@ class DatabaseCodeGen extends QCodegen
         return $strToReturn;
     }
 
-    public function __construct($objSettingsXml)
+    public function __construct($objSettingsXml, $index)
     {
         parent::__construct($objSettingsXml);
         // Make settings file accessible to templates
@@ -314,7 +314,8 @@ class DatabaseCodeGen extends QCodegen
         $this->strExcludedTableArray = array();
 
         // Set the DatabaseIndex
-        $this->intDatabaseIndex = static::lookupSetting($objSettingsXml, null, 'index', Type::INTEGER);
+//        $this->intDatabaseIndex = static::lookupSetting($objSettingsXml, null, 'index', Type::INTEGER);
+        $this->intDatabaseIndex = $index;
 
         // Append Suffix/Prefixes
         $this->strClassPrefix = static::lookupSetting($objSettingsXml, 'className', 'prefix');

@@ -7,7 +7,9 @@ use QCubed\QString;
 
 define('QCUBED_CODE_GENERATING', true);
 
-require_once(__DIR__ . '/qcubed.inc.php');
+//require_once(__DIR__ . '/qcubed.inc.php');
+
+require_once ('/Users/vaibhav/code/orm/install/project/includes/configuration/active/0config.cfg.php');
 
 if (!defined('QCUBED_URL_PREFIX')) {
     echo "Cannot find the configuration file. Make sure your qcubed.inc.php file is installed correctly."; exit;
@@ -26,7 +28,10 @@ if (QCUBED_URL_PREFIX == '{ url_prefix }') {
 
 $strOrmPath = dirname(__DIR__);
 $strQCubedPath = dirname($strOrmPath);
-$loader = require(dirname($strQCubedPath) . '/autoload.php'); // Add the Composer autoloader if using Composer
+
+// IMPORTANT: Replace the value here with a configurable one
+$loader = require($strOrmPath . '/vendor/autoload.php');
+//$loader = require(dirname($strQCubedPath) . '/autoload.php'); // Add the Composer autoloader if using Composer
 $loader->addPsr4('QCubed\\', $strOrmPath . '/../common/src');
 $loader->addPsr4('QCubed\\', $strOrmPath . '/src');
 
@@ -39,7 +44,12 @@ $loader->addPsr4('QCubed\\Project\\', QCUBED_PROJECT_DIR . '/qcubed'); // make s
 /////////////////////////////////////////////////////
 // Run CodeGen, using the ./codegen_settings.xml file
 /////////////////////////////////////////////////////
-Codegen::run(QCUBED_CONFIG_DIR . '/codegen_settings.xml');
+//Codegen::run(QCUBED_CONFIG_DIR . '/codegen_settings.xml');
+
+// CONFIGCHANGE: Change this properly
+//Codegen::run(QCUBED_CONFIG_DIR . '/codegen_settings.xml');
+
+Codegen::run(__DIR__ . '/../config/config.json');
 
 function displayMonospacedText($strText)
 {
@@ -53,6 +63,10 @@ function displayMonospacedText($strText)
 }
 
 $strPageTitle = "QCubed Development Framework - Code Generator";
+
+// CONFIGCHANGE
+define('QCUBED_VERSION', '4.0');
+
 ?>
 <h1>Code Generator</h1>
 <div class="headerLine"><span><strong>PHP Version:</strong> <?php echo(PHP_VERSION); ?>;&nbsp;&nbsp;<strong>Zend Engine Version:</strong> <?php echo(zend_version()); ?>

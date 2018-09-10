@@ -1,0 +1,66 @@
+{
+  "application": {
+    "name": "ORM TEST"
+  },
+  "formgen": {
+    "createMethod": "queryString",
+    "buttonClass": "\\QCubed\\Project\\Control\\Button",
+    "preferredRenderMethod": "RenderWithName"
+  },
+  "encoding": "UTF-8",
+  "databases": [
+    {
+      "adapter": "PostgreSql",
+      "server": "localhost",
+      "port": 5432,
+      "database": "vaibhav",
+      "username": "vaibhav",
+      "password": "vaibhav",
+      "profiling": false,
+      "dateformat": null,
+      "className": {
+        "prefix": "",
+        "suffix": ""
+      },
+      "associatedObjectName" : {
+        "prefix": "",
+        "suffix": ""
+      },
+      "typeTableIdentifier": {
+        "suffix":"_type"
+      },
+      "associationTableIdentifier": {
+        "suffix":"_assn"
+      },
+      "stripFromTableName": {
+        "prefix": ""
+      },
+      "createOptions": {
+        "autoInitialize":"true",
+        "privateColumnVars":"true"
+      },
+      "excludeTables": {
+        "pattern": "",
+        "list":""
+      },
+      "includeTables": {
+        "pattern": "",
+        "list":""
+      },
+      "manualQuery": {
+        "support": false
+      },
+      "columnCommentForModelConnector": {
+        "delimiter": ""
+      },
+      "generateControlId": {
+        "support": false
+      },
+      "relationshipsScript":{
+        "filepath":"",
+        "format":""
+      },
+      "relationships": ""
+    }
+  ]
+}

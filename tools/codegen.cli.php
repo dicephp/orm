@@ -31,7 +31,8 @@ For more information, please go to http://qcu.be
 
 \QCubed\Database\Service::InitializeDatabaseConnections();
 
-$settingsFile = QCUBED_CONFIG_DIR . '/codegen_settings.xml';
+//$settingsFile = QCUBED_CONFIG_DIR . '/codegen_settings.xml';
+$settingsFile = '../config/config.json';
 
 if (!is_file($settingsFile)) {
 	echo "Settings file: " . $settingsFile;

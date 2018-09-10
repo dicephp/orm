@@ -51,10 +51,24 @@ class Service extends ObjectBase
             throw new \Exception('Do not define DB_CONNECTION_0. Start at DB_CONNECTION_1');
         }
 
+        $Config = json_decode(file_get_contents(__DIR__ . '/../../config/config.json'), true);
+//        foreach ($Config['databases'] as $index => $database) {
+//                define(sprintf('DB_CONNECTION_%', $index+1), serialize(array(
+//                    'adapter' => $Config['databases'][$index]['adapter'],
+//                    'server' =>$Config['databases'][$index]['server'],
+//                    'port' =>$Config['databases'][$index]['port'],
+//                    'database' =>$Config['databases'][$index]['database'],
+//                    'username' =>$Config['databases'][$index]['username'],
+//                    'password' =>$Config['databases'][$index]['password'],
+//                    'profiling' =>$Config['databases'][$index]['profiling'],
+//                    'dateformat' =>$Config['databases'][$index]['dateformat'],
+//                )));
+//        }
+
         for ($intIndex = 1; $intIndex <= $intMaxIndex; $intIndex++) {
             $strConstantName = sprintf('DB_CONNECTION_%s', $intIndex);
 
-            if (defined($strConstantName)) {
+            if (isset($Config['databases'][$intIndex - 1])) {
                 // Expected Keys to be Set
                 $strExpectedKeys = array(
                     'adapter',
@@ -68,8 +82,10 @@ class Service extends ObjectBase
                 );
 
                 // Lookup the Serialized Array from the DB_CONFIG constants and unserialize it
-                $strSerialArray = constant($strConstantName);
-                $objConfigArray = unserialize($strSerialArray);
+//                $strSerialArray = constant($strConstantName);
+//                $objConfigArray = unserialize($strSerialArray);
+
+                $objConfigArray = $Config['databases'][$intIndex - 1];
 
                 // Set All Expected Keys
                 foreach ($strExpectedKeys as $strExpectedKey) {
@@ -94,6 +110,7 @@ class Service extends ObjectBase
                 //}
 
                 self::$Database[$intIndex] = new $strDatabaseType($intIndex, $objConfigArray);
+                $x = 3;
             }
         }
     }

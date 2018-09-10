@@ -256,6 +256,8 @@ abstract class CodegenBase extends ObjectBase
             define('QCUBED_CODE_GENERATING', true);
         }
 
+        define('QCUBED_CONFIG_DIR', __DIR__ . '/../../config/config.json');
+
         Codegen::$CodeGenArray = array();
         Codegen::$SettingsFilePath = $strSettingsXmlFilePath;
 
@@ -272,7 +274,9 @@ abstract class CodegenBase extends ObjectBase
         // Try Parsing the Xml Settings File
         try {
             $errorHandler = new Error\Handler('\\QCubed\\Codegen\\QcubedHandleCodeGenParseError', E_ALL);
-            Codegen::$SettingsXml = new \SimpleXMLElement(file_get_contents($strSettingsXmlFilePath));
+//            Codegen::$SettingsXml = new \SimpleXMLElement(file_get_contents($strSettingsXmlFilePath));
+            // CONFIGCHANGE
+            Codegen::$SettingsXml =  json_decode(file_get_contents($strSettingsXmlFilePath), true);
             $errorHandler->restore();
         } catch (\Exception $objExc) {
             Codegen::$RootErrors .= 'FATAL ERROR: Unable to parse CodeGenSettings XML File: ' . $strSettingsXmlFilePath;
@@ -282,13 +286,23 @@ abstract class CodegenBase extends ObjectBase
         }
 
         // Application Name
-        Codegen::$ApplicationName = Codegen::lookupSetting(Codegen::$SettingsXml, 'name', 'application');
+        Codegen::$ApplicationName = Codegen::lookupSetting(Codegen::$SettingsXml, 'application', 'name');
+        // CONFIGCHANGE
+//        Codegen::$ApplicationName = Codegen::$SettingsXml['application']['name'];
 
         // Codegen Defaults
-        Codegen::$PreferredRenderMethod = Codegen::lookupSetting(Codegen::$SettingsXml, 'formgen',
-            'preferredRenderMethod');
+        Codegen::$PreferredRenderMethod = Codegen::lookupSetting(Codegen::$SettingsXml, 'formgen','preferredRenderMethod');
+        // CONFIGCHANGE
+//        Codegen::$PreferredRenderMethod = Codegen::$SettingsXml['formgen']['preferredRenderMethod'];
+
+
+
         Codegen::$CreateMethod = Codegen::lookupSetting(Codegen::$SettingsXml, 'formgen', 'createMethod');
+        // CONFIGCHANGE
+//        Codegen::$CreateMethod = Codegen::$SettingsXml['formgen']['createMethod'];
         Codegen::$DefaultButtonClass = Codegen::lookupSetting(Codegen::$SettingsXml, 'formgen', 'buttonClass');
+        // CONFIGCHANGE
+//        Codegen::$DefaultButtonClass = Codegen::$SettingsXml['formgen']['buttonClass'];
 
         if (!Codegen::$DefaultButtonClass) {
             Codegen::$RootErrors .= "CodeGen Settings XML Fatal Error: buttonClass was not defined\r\n";
@@ -296,21 +310,70 @@ abstract class CodegenBase extends ObjectBase
         }
 
         // Iterate Through DataSources
-        if (Codegen::$SettingsXml->dataSources->asXML()) {
-            foreach (Codegen::$SettingsXml->dataSources->children() as $objChildNode) {
-                switch (dom_import_simplexml($objChildNode)->nodeName) {
-                    case 'database':
-                        Codegen::$CodeGenArray[] = new DatabaseCodeGen($objChildNode);
-                        break;
-                    case 'restService':
-                        Codegen::$CodeGenArray[] = new RestServiceCodeGen($objChildNode);
-                        break;
-                    default:
-                        Codegen::$RootErrors .= sprintf("Invalid Data Source Type in CodeGen Settings XML File (%s): %s\r\n",
-                            $strSettingsXmlFilePath, dom_import_simplexml($objChildNode)->nodeName);
-                        break;
+
+        foreach (Codegen::$SettingsXml['databases'] as $index => $dataBase) {
+            Codegen::$CodeGenArray[] = new DatabaseCodeGen($dataBase, $index+1);
+//            define(sprintf('DB_CONNECTION_%', $index+1), array(
+//                'adapter' => Codegen::$SettingsXml['databases'][$index]['adapter'],
+//                'server' =>Codegen::$SettingsXml['databases'][$index]['server'],
+//                'port' =>Codegen::$SettingsXml['databases'][$index]['port'],
+//                'database' =>Codegen::$SettingsXml['databases'][$index]['database'],
+//                'username' =>Codegen::$SettingsXml['databases'][$index]['username'],
+//                'password' =>Codegen::$SettingsXml['databases'][$index]['password'],
+//                'profiling' =>Codegen::$SettingsXml['databases'][$index]['profiling'],
+//                'dateformat' =>Codegen::$SettingsXml['databases'][$index]['dateformat'],
+//            ));
+        }
+
+//        if (Codegen::$SettingsXml->dataSources->asXML()) {
+//            foreach (Codegen::$SettingsXml->dataSources->children() as $objChildNode) {
+//                switch (dom_import_simplexml($objChildNode)->nodeName) {
+//                    case 'database':
+//                        Codegen::$CodeGenArray[] = new DatabaseCodeGen($objChildNode);
+//                        break;
+//                    case 'restService':
+//                        Codegen::$CodeGenArray[] = new RestServiceCodeGen($objChildNode);
+//                        break;
+//                    default:
+//                        Codegen::$RootErrors .= sprintf("Invalid Data Source Type in CodeGen Settings XML File (%s): %s\r\n",
+//                            $strSettingsXmlFilePath, dom_import_simplexml($objChildNode)->nodeName);
+//                        break;
+//                }
+//            }
+//        }
+    }
+
+    /**
+     * This will lookup either the node value (if no attributename is passed in) or the attribute value
+     * for a given Tag.  Node Searches only apply from the root level of the configuration XML being passed in
+     * (e.g. it will not be able to lookup the tag name of a grandchild of the root node)
+     *
+     * If No Tag Name is passed in, then attribute/value lookup is based on the root node, itself.
+     *
+     * @param array $settingSection Settings array within which to find the setting
+     * @param string $strLookupNode Node within which the setting is to be searched
+     * @param null|string $strSettingKey Keynae within the node to lookup for the setting
+     * @param string $strType Type in which the data is required (Currently inactive)
+     * @return mixed the return type depends on the Type you pass in to $strType
+     * @throws \Exception
+     */
+    static public function lookupSetting($settingSection, $strLookupNode, $strSettingKey = null, $strType = Type::STRING) {
+        if(!is_array($settingSection)) {
+            return $settingSection;
+        }
+
+        if(isset($settingSection[$strLookupNode])) {
+            if($strSettingKey !== null) {
+                if(isset($settingSection[$strLookupNode][$strSettingKey])){
+                    return $settingSection[$strLookupNode][$strSettingKey];
+                } else {
+                    throw new \Exception('SettingKey not found');
                 }
+            } else {
+                return $settingSection[$strLookupNode];
             }
+        } else {
+            throw new \Exception('Node not found');
         }
     }
 
@@ -326,8 +389,10 @@ abstract class CodegenBase extends ObjectBase
      * @param string $strAttributeName
      * @param string $strType
      * @return mixed the return type depends on the Type you pass in to $strType
+     * @throws Caller
+     * @throws \QCubed\Exception\InvalidCast
      */
-    static public function lookupSetting($objNode, $strTagName, $strAttributeName = null, $strType = Type::STRING)
+    static public function lookupSetting_OLD($objNode, $strTagName, $strAttributeName = null, $strType = Type::STRING)
     {
         if ($strTagName) {
             $objNode = $objNode->$strTagName;
