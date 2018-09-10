@@ -41,7 +41,7 @@ foreach ($objTable->PrimaryKeyColumnArray as $objColumn) {
         }
 
         // Use QuerySingle to Perform the Query
-        $objToReturn = \QCubed\Model\<?= $objTable->ClassName ?>::querySingle(
+        $objToReturn = \<?= $objTable->OutputNamespace ?>\<?= $objTable->ClassName ?>::querySingle(
             QQ::AndCondition(
 <?php foreach ($objTable->PrimaryKeyColumnArray as $objColumn) { ?>
                 QQ::Equal(QQN::<?= $objTable->ClassName ?>()-><?= $objColumn->PropertyName ?>, $<?= $objColumn->VariableName ?>),

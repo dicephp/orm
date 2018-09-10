@@ -26,7 +26,7 @@
 			// do not initialize with a default value
 	 	}
 	 	else { ?>
-        $this-><?= $objColumn->VariableName ?> = \QCubed\Model\<?php
+        $this-><?= $objColumn->VariableName ?> = \<?= $objTable->OutputNamespace ?>\<?php
         $defaultVarName = $objTable->ClassName . '::' . strtoupper($objColumn->Name) . '_DEFAULT';
         if ($objColumn->VariableType != \QCubed\Type::DATE_TIME)
             print ($defaultVarName);

@@ -116,7 +116,7 @@ if ($strValues) {
     protected function insert()
     {
         $mixToReturn = null;
-        $objDatabase = \QCubed\Model\<?= $objTable->ClassName ?>::GetDatabase();
+        $objDatabase = \<?= $objTable->OutputNamespace ?>\<?= $objTable->ClassName ?>::GetDatabase();
 <?php if (isset($timestampColumn) && $timestampColumn->AutoUpdate) { // We are manually updating a timestamp column here?>
         $this-><?= $timestampColumn->VariableName ?> = QDateTime::nowToString(QDateTime::FormatIso);
         $this->__blnValid[self::<?= strtoupper($timestampColumn->Name) ?>_FIELD] = true;
