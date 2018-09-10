@@ -26,6 +26,7 @@ use QCubed\Type;
  * @property ReverseReference[] $ReverseReferenceArray
  * @property ManyToManyReference[] $ManyToManyReferenceArray
  * @property Index[] $IndexArray
+ * @property string $OutputNamespace
  * @property-read int $ReferenceCount
  * @property array $Options
  */
@@ -82,6 +83,12 @@ class SqlTable extends ObjectBase {
 	 */
 	protected $objIndexArray;
 
+    /**
+     * Namespace under which the Model class has to be declared
+     * @var string
+     */
+	protected $strOutputNamespace;
+
 	/**
 	 * @var array developer specified options.
 	 */
@@ -104,6 +111,7 @@ class SqlTable extends ObjectBase {
 		$this->objManyToManyReferenceArray = array();
 		$this->objColumnArray = array();
 		$this->objIndexArray = array();
+		$this->strOutputNamespace = '';
 	}
 
 
@@ -214,6 +222,8 @@ class SqlTable extends ObjectBase {
 				return (array) $this->objManyToManyReferenceArray;
 			case 'IndexArray':
 				return (array) $this->objIndexArray;
+            case 'OutputNamespace':
+                return (string) $this->strOutputNamespace;
 			case 'ReferenceCount':
 				$intCount = count($this->objManyToManyReferenceArray);
 				foreach ($this->objColumnArray as $objColumn)
@@ -262,6 +272,8 @@ class SqlTable extends ObjectBase {
 					return $this->objManyToManyReferenceArray = Type::cast($mixValue, Type::ARRAY_TYPE);
 				case 'IndexArray':
 					return $this->objIndexArray = Type::cast($mixValue, Type::ARRAY_TYPE);
+                case 'OutputNamespace':
+                    return $this->strOutputNamespace = Type::cast($mixValue, Type::STRING);
 				case 'Options':
 					return $this->options = Type::cast($mixValue, Type::ARRAY_TYPE);
 				default:

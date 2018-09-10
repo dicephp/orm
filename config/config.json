@@ -18,6 +18,7 @@
       "password": "vaibhav",
       "profiling": false,
       "dateformat": null,
+      "namespace": "QCubed\\Model",
       "className": {
         "prefix": "",
         "suffix": ""

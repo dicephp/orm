@@ -3,7 +3,7 @@
  * Generated Test base class file
  */
 
-namespace QCubed\ModelGen; //\Test;
+namespace QCubed\ModelGen;
 
 use QCubed\Query\QQ;
 use QCubed\Query\Condition\ConditionInterface as iCondition;
@@ -186,7 +186,7 @@ abstract class TestGen extends \QCubed\ObjectBase implements \IteratorAggregate,
         }
 
         // Use QuerySingle to Perform the Query
-        $objToReturn = Test::querySingle(
+        $objToReturn = \QCubed\Model\Test::querySingle(
             QQ::AndCondition(
                 QQ::Equal(QQN::Test()->Id, $intId)
             ),
@@ -343,7 +343,7 @@ abstract class TestGen extends \QCubed\ObjectBase implements \IteratorAggregate,
         $objToReturn = static::getFromCache ($key);
         if (empty($objToReturn)) {
             // Create a new instance of the Test object
-            $objToReturn = new Test(false);
+            $objToReturn = new \QCubed\Model\Test(false);
             $objToReturn->__blnRestored = true;
             $blnNoCache = false;
 

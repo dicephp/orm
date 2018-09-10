@@ -10,6 +10,7 @@
 	);
 ?>
 <?php print("<?php\n"); ?>
+namespace QCubed\ModelGen;
     /**
      * Class QQN
      * Factory methods for generating database nodes at the top of a node chain.

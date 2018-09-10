@@ -38,6 +38,10 @@ class DatabaseCodeGen extends QCodegen
     /** @var string The delimiter to be used for parsing comments on the DB tables for being used as the name of ModelConnector's Label */
     protected $strCommentConnectorLabelDelimiter;
 
+    // Output Namespace
+    /** @var string Namespace to be used in the outputted model classes for this database */
+    protected $outputNamespace;
+
     // Table Suffixes
     protected $strTypeTableSuffixArray;
     protected $intTypeTableSuffixLengthArray;
@@ -316,6 +320,9 @@ class DatabaseCodeGen extends QCodegen
         // Set the DatabaseIndex
 //        $this->intDatabaseIndex = static::lookupSetting($objSettingsXml, null, 'index', Type::INTEGER);
         $this->intDatabaseIndex = $index;
+
+        // Set the output Namespace
+        $this->outputNamespace = static::lookupSetting($objSettingsXml, 'namespace', null);
 
         // Append Suffix/Prefixes
         $this->strClassPrefix = static::lookupSetting($objSettingsXml, 'className', 'prefix');
@@ -923,6 +930,8 @@ class DatabaseCodeGen extends QCodegen
 
         $objTable->Options = $this->objModelConnectorOptions->getOptions($objTable->ClassName,
             OptionFile::TABLE_OPTIONS_FIELD_NAME);
+
+        $objTable->OutputNamespace = $this->outputNamespace;
 
         // Get the List of Columns
         $objFieldArray = $this->objDb->getFieldsForTable($strTableName);

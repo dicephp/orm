@@ -1,5 +1,5 @@
 <?php
-	/** @var QSqlTable $objTable */
+	/** @var \QCubed\Codegen\SqlTable $objTable */
 	/** @var \QCubed\Codegen\DatabaseCodeGen $objCodeGen */
 	global $_TEMPLATE_SETTINGS;
 	$_TEMPLATE_SETTINGS = array(
@@ -14,7 +14,7 @@
  * Generated <?= $objTable->ClassName ?> base class file
  */
 
-namespace QCubed\ModelGen; //\<?= $objTable->ClassName ?>;
+namespace <?= $objTable->OutputNamespace ?>Gen;
 
 use QCubed\Query\QQ;
 use QCubed\Query\Condition\ConditionInterface as iCondition;

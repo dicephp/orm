@@ -78,7 +78,7 @@ if ($blnImmediateExpansions || $blnExtendedExpansions) {
         if (empty($objToReturn)) {
 <?php } ?>
             // Create a new instance of the <?= $objTable->ClassName ?> object
-            $objToReturn = new <?= $objTable->ClassName ?>(false);
+            $objToReturn = new \QCubed\Model\<?= $objTable->ClassName ?>(false);
             $objToReturn->__blnRestored = true;
             $blnNoCache = false;
 
